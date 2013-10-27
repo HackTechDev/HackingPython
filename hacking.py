@@ -66,6 +66,10 @@ def main():
     screen_height = 800
     screen=pygame.display.set_mode([screen_width,screen_height])
 
+    icon = pygame.image.load("computer.bmp").convert_alpha()        
+    pygame.display.set_icon(icon)
+
+
     pygame.display.set_caption("Hacking")
 
     done = False
