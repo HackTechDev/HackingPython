@@ -39,8 +39,11 @@ class Visor(pygame.sprite.Sprite):
     def __init__(self, color, width, height):
         pygame.sprite.Sprite.__init__(self)
 
+        # Set a transparent color
         self.image = pygame.Surface([width, height])
-        self.image.fill(color)
+        self.image.fill((255,0,255))
+        self.image.set_colorkey((255,0,255))
+        self.image.set_alpha(50)
 
         self.rect = self.image.get_rect()
 
@@ -101,6 +104,8 @@ def main():
             if event.type == pygame.QUIT:
                 done = True 
             elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_q:
+                    done = True
                 if event.key == pygame.K_LEFT:
                     x_speed=-3
                 elif event.key == pygame.K_RIGHT:
@@ -131,6 +136,20 @@ def main():
                     y_speed=0
         
 
+            # Left mouse click
+            if pygame.mouse.get_pressed()[0] == True:
+                mousex = pygame.mouse.get_pos()[0]
+                mousey = pygame.mouse.get_pos()[1]
+                print "Shoot!"
+                for computer in computer_list:
+                    if( mousex > computer.posx and  mousex < computer.posx+20 and mousey > computer.posy and mousey < computer.posy+15):
+                        print "Hack!"
+                        computer_list.remove(computer)
+                        all_sprites_list.remove(computer)
+                        score = score + 1
+           
+
+
         x_coord = x_coord + x_speed
         y_coord = y_coord + y_speed
 
@@ -141,10 +160,6 @@ def main():
         screen.blit(worldmapImage, [0,0])
         
 
-        visor.rect.x= pos[0] - 2 
-        visor.rect.y= pos[1] - 2
-        drawVisor(screen, pos[0], pos[1])
-
 
         text = font.render("Localisation: " + str(pos[0]) + " " + str(pos[1]), True, black)
         screen.blit(text, [10, 10])
@@ -153,6 +168,11 @@ def main():
         screen.blit(scoreText, [10, 30])
 
         all_sprites_list.draw(screen)
+
+        visor.rect.x= pos[0] - 2 
+        visor.rect.y= pos[1] - 2
+        drawVisor(screen, pos[0], pos[1])
+
 
         pygame.display.flip()
         clock.tick(20)
